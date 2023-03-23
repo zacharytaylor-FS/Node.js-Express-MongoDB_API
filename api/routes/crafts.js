@@ -9,13 +9,27 @@ router.get('/findAll',(req, res, next) => {
     .then(result => {
       res.status(200).json({
         message: "Get Craft(s)",
-        
+        user: {
+          name: result.name,
+          email: result.email,
+          id: result._id
+        },
+        metadata: {
+          host: req.hostname,
+          method: req.method
+        }
       })
     })
-    .catch();
-  res.json({
-    message: 'Crafts - GET ALL'
-  });
+    .catch(err => {
+      console.error(err.message);
+      res.status(500).json({
+        error: {
+          message: err.message,
+          status: err.status
+        }
+      })
+    });
+ 
 });
 router.post('/create', (req, res, next) => {
   Craft.find()

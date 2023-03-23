@@ -11,7 +11,7 @@ const craftSchema = new mongoose.Schema({
     last: String,
     required: true
   },
-  title: {
+  type: {
     type: String,
     required: true,
   },
