@@ -9,7 +9,15 @@ router.get('/findAll',(req, res, next) => {
     .then(result => {
       res.status(200).json({
         message: "Get User(s)",
-        
+        user: {
+          name: result.name,
+          email: result.email,
+          id: result._id
+        },
+        metadata: {
+          host: req.hostname,
+          method: req.method
+        }
       })
     })
     .catch();

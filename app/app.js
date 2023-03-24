@@ -1,10 +1,13 @@
 const express = require('express');
 const app = express();
-const cors = require('cors');
 const morgan = require('morgan')
-const {connection} = require('../api/db/db')
+const mongoose = require('mongoose');
 const userRouter = require('../api/routes/users');
 const craftsRouter = require('../api/routes/crafts');
+const { connection } = require('../db/db')
+// const cors = require('cors');
+require('dotenv').config();
+
 
 //* middleware for logger
 app.use(morgan("dev"));
@@ -16,17 +19,23 @@ app.use(express.urlencoded({
 
 //* middleware returns json
 app.use(express.json());
-
-app.use(cors())
+//* Routes
+app.use('/crafts', craftsRouter)
+app.use('/users', userRouter)
+// app.use(cors())
+app.use((req,res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type,Accept, Authorization");
+    if(req.method === "OPTIONS"){
+        res.header("Access-Control-Allow-Methods", "POST,PUT,GET,PATCH,DELETE")
+    }
+    next();
+})
 
 //* http://localhost:8080
 app.get('/', (req, res, next) =>{ 
   res.status(200).json({message: 'Service is up'})
 });
-
-//* Routes
-app.use('/crafts', craftsRouter)
-app.use('/users', userRouter)
 
 //! ERRORS
 //* Middleware to handle errors and bad url path
@@ -45,5 +54,5 @@ app.use((error,req, res, next) => {
   });
 });
 
-connection()
+connection();
 module.exports= app
