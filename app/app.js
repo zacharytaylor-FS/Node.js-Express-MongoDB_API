@@ -4,7 +4,6 @@ const morgan = require('morgan')
 const mongoose = require('mongoose');
 const userRouter = require('../api/routes/users');
 const craftsRouter = require('../api/routes/crafts');
-const { connection } = require('../db/db')
 // const cors = require('cors');
 require('dotenv').config();
 
@@ -54,5 +53,5 @@ app.use((error,req, res, next) => {
   });
 });
 
-connection();
+mongoose.connect(process.env.MONGODB).catch(error => console.log(error))
 module.exports= app
